@@ -5,9 +5,11 @@
 //The rating must be between * and *****.
 
 public class Playlist {
-    
+    private String[][] songs;
     
     public Playlist(String [][] songs){
+        this.songs = normalize(songs);
+        this.songs = songs;
     }
     
     public Playlist add(String [] song){
@@ -23,7 +25,7 @@ public class Playlist {
     }      
 
     public int size(){
-        return -1;
+        return songs.length;
     }    
     
    
@@ -45,5 +47,30 @@ public class Playlist {
     
     public boolean equals(Object o){
         return equals((Playlist)o);
+    }
+    
+    
+    private String [][] normalize(String[][] song){
+        for(int i = 0; i < song.length; i++){
+            for(int j = 0; j < song[0].length; j++){
+                if(song[i][j] == null) continue;
+                else if(song[i][j].contains("*")){
+                    String norm = song[i][j].replace(" ", "");
+                }
+                
+                String[] listWords = song[i][j].trim().toLowerCase().split("\\s+");
+                
+                StringBuilder concat = new StringBuilder();
+                
+                for (String word : listWords){
+                    Character initial = Character.toUpperCase(word.charAt(0));
+                    String rest = word.substring(1);
+                    concat.append(initial).append(rest).append(" ");
+                }
+                
+                song[i][j] = concat.toString().trim();
+            }
+        }
+        return song;
     }
 }
