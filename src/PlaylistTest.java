@@ -65,7 +65,84 @@ public class PlaylistTest{
              {null, "Fleetwood Mac", null, "4", "**   **"}};
        assertEquals(new Playlist(songs),new Playlist(sameSongs));
     }
-    
+
+    @Test
+    public void shouldDefineAPlaylistName(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Vallenatos");
+
+        assertEquals(0, mt.size("Vallenatos"));
+    }
+
+    @Test
+    public void shouldAssignAPlaylistToAName(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Rockcitos");
+        String [][] songs=
+            {{"Numb", "Linkin Park", "9", "Rock", null},
+             {"Alive", "Pearl Jam", "Rock", "5", "****"},
+             {"Creep", "Radiohead", "Rock", null, "*****"},};
+        mt.assign("Rockcitos", songs);
+
+        assertEquals(2, mt.size("Rockcitos"));
+    }
+
+    @Test
+    public void shouldGiveAListOfPlaylistNames(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Vallenatos");
+        mt.define("Rock");
+        mt.define("Salsa");
+
+        assertEquals("Rock,Salsa,Vallenatos", mt.toString());
+    }
+
+    @Test
+    public void nombre1(){
+        String [][] songs = {{"Numb", "Linkin Park", "Rock", "9", null}};
+        Playlist pl = new Playlist(songs);
+        
+        String[] newSong = {"Alive", "Pearl Jam", "Rock", "5", "****"};
+        pl.add(newSong);
+
+        assertEquals(2, pl.size());
+    }
+
+    @Test
+    public void nombre2(){
+        String [][] songs=
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb", "Linkin Park   ", "Rock", "7", null},
+             {"Alive", "PEARL   JAM", "Rock", "5", "****"},
+             {"Creep", null, "ROCK", null, "*****"},
+             {null, "Fleetwood Mac", null, "4", "**   **"}};
+            
+        String[] songToDelete = {"ALIVE", "Pearl           JAM", "Rock", "5", "****"};
+
+        String [][] expResult=
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb   ", "Linkin     Park   ", "Rock", "7", null}};
+
+        Playlist pl = new Playlist(songs);
+        pl.delete(songToDelete);
+
+        
+        assertEquals(2, pl.size());
+        assertEquals(new Playlist(expResult), pl);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Tears down the test fixture.
      *
