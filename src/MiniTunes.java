@@ -122,47 +122,46 @@ public class MiniTunes{
         
         Playlist playlistA = null;
         
-        //switch(op){}
-        //Revisar si son necesarios los return o si deberia seguir evaluando casos
-        if (op == 'u'){ //union
-            if (playlistC == null){
+        switch(op){
+            case 'u':
+                if (playlistC == null){
                 if (playlistB == null){
                     playlistA = null;
                     return;
                 }
                 playlistA = playlistB;
                 return;
-            }
-            else if (playlistB == null) {
-                playlistA = playlistC;
-                return;
-            }
-            playlistA = union(a, b, c);
-        }
-    
-        else if (op == 'i'){ //Intersection
-            if (playlistC == null || playlistB == null){
+                }
+                else if (playlistB == null) {
+                    playlistA = playlistC;
+                    return;
+                }
+                playlistA = union(a, b, c);
+                break;
+                
+            case 'i':
+                if (playlistC == null || playlistB == null){
                 playlistA = null;
                 return;
-            }
-            playlistA = intersection(a, b, c);
-        }
-        
-        else if (op == 'd'){ //diference
-            if (playlistB == null){
+                }
+                playlistA = intersection(a, b, c);
+                break;
+                
+            case 'd':
+                if (playlistB == null){
                 playlistA = null;
                 return;
-            }
-            else if (playlistB != null && playlistC == null){
-                playlistA = playlistB;
-                return;
-            }
-            playlistA = difference(a, b, c);
+                }
+                else if (playlistB != null && playlistC == null){
+                    playlistA = playlistB;
+                    return;
+                }
+                playlistA = difference(a, b, c);
+                break;
         }
         if (playlistA != null){
             playlists.put(a, playlistA);
         }
-        //**************Hace falta revisar como se guarda, porque este proceso no esta quedando en ningun lado.
     }
   
     private Playlist union(String a, String b, String c){
