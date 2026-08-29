@@ -195,10 +195,11 @@ public class MiniTunes{
             justInB =  true;
             for (int j = 0; j < b.size(); j++){
                 if (songsC[i][0].equals(songsB[j][0]) && songsC[i][1].equals(songsB[j][1])){
-                    justInB = false; //Si no esta solo en B, debe eliminarse del resultado
-                    break;
+                    justInB = false; 
+                    break;//Si solo esta en b, no se le hace nada
                 }
-            }//Si solo esta en b, no se le hace nada
+            }
+            //Si no esta solo en B, debe eliminarse del resultado
             if (!justInB) a.delete(songsC[i]);
         }
         return a;
