@@ -66,18 +66,25 @@ public class MiniTunes{
     
     // Returns the string representation of a playlist.
     /**
-     * Return the string representation of a playlist.
+     * Return the string representation of a playlist. the names of a list
      * @param name  the name of a playlist
      */
     public String toString(String name){
         Playlist actualPlaylist = playlists.get(name);
+        
         if (actualPlaylist == null) return "";
-        for (int i = 0; i < actualPlaylist.size(); i++ ){
-            
+        
+        String [][] actualSongs = actualPlaylist.getSongs(); 
+        if ( actualSongs == null || actualSongs.length == 0) return "";
+        
+        String songsComma = "";
+        for (int i =0; i < actualSongs.length; i++){
+            songsComma += actualSongs[i][0];
+            if(i < actualSongs.length - 1){
+                songsComma += ", ";
+            }
         }
-        
-        
-        return null;
+        return songsComma;
     }    
     
     //Assigns the value of a unary operation to a playlist name
@@ -112,8 +119,10 @@ public class MiniTunes{
     public void assignBinary(String a, String b, char op, String c){
         Playlist playlistB = playlists.get(b);
         Playlist playlistC = playlists.get(c);
-        Playlist playlistA;
         
+        Playlist playlistA = null;
+        
+        //switch(op){}
         //Revisar si son necesarios los return o si deberia seguir evaluando casos
         if (op == 'u'){ //union
             if (playlistC == null){
@@ -128,7 +137,7 @@ public class MiniTunes{
                 playlistA = playlistC;
                 return;
             }
-            playlistA = union(playlistB, playlistC);
+            playlistA = union(a, b, c);
         }
     
         else if (op == 'i'){ //Intersection
@@ -136,7 +145,7 @@ public class MiniTunes{
                 playlistA = null;
                 return;
             }
-            playlistA = intersection(playlistB, playlistC);
+            playlistA = intersection(a, b, c);
         }
         
         else if (op == 'd'){ //diference
@@ -148,72 +157,100 @@ public class MiniTunes{
                 playlistA = playlistB;
                 return;
             }
-            playlistA = difference(playlistB, playlistC);
+            playlistA = difference(a, b, c);
+        }
+        if (playlistA != null){
+            playlists.put(a, playlistA);
         }
         //**************Hace falta revisar como se guarda, porque este proceso no esta quedando en ningun lado.
     }
   
-    private Playlist union(Playlist b, Playlist c){
-        String [][] songsB = b.getSongs();
-        String [][] songsC = c.getSongs();
+    private Playlist union(String a, String b, String c){
+        define(a);
         
-        Playlist a = new Playlist(songsB);
+        Playlist playlistB = getPlaylist(b);
+        Playlist playlistC = getPlaylist(c);
+        
+        assign(a, playlistB.getSongs());
+        
+        String[][] songsB = playlistB.getSongs();
+        String[][] songsC = playlistC.getSongs();
         
         boolean isAlready;
-        for (int i = 0; i < c.size(); i++){
+        
+        for (int i = 0; i < playlistC.size(); i++){
             isAlready = false;
-            for (int j = 0; j < b.size(); j++){
+            for (int j = 0; j < playlistB.size(); j++){
                 if (songsC [i][0].equals(songsB[j][0]) && songsC[i][1].equals(songsB[j][1])){
                     //si ya está, no se adiciona
                     isAlready = true;
                     break;
                 }
             }
-            if (!isAlready) a.add(songsC[i]);
+            if (!isAlready){
+                assignUnary(a, a ,'a', songsC[i]);
+            };
         }
-        return a;
+        return getPlaylist(a);
     }
     
-    private Playlist intersection (Playlist b, Playlist c){
-        String [][] songsB = b.getSongs();
-        String [][] songsC = c.getSongs();
+    private Playlist intersection (String a, String b, String c){
+        define(a);
         
-        Playlist a = new Playlist(new String [0][0]);
+        Playlist playlistB = getPlaylist(b);
+        Playlist playlistC = getPlaylist(c);
+        
+        assign(a, new String [0][0]);
+        
+        String [][] songsB = playlistB.getSongs();
+        String [][] songsC = playlistC.getSongs();
         
         boolean isInCommon;
-        for (int i = 0; i < c.size(); i++){
+        
+        for (int i = 0; i < playlistC.size(); i++){
             isInCommon = false;
-            for (int j = 0; j < b.size(); j++){
+            for (int j = 0; j < playlistB.size(); j++){
                 if (songsC [i][0].equals(songsB[j][0]) && songsC[i][1].equals(songsB[j][1])){
-                    //si son iguales, se adiciona.
+                    //si estan en comun, hacen parte de la interseccion.
+                    System.out.println("Si esta entrando aca.");
                     isInCommon = true;
                     break;
                 }
             } //si no se encontró ninguna coincidencia, pasa a la siguiente iteracion.
-            if (isInCommon) a.add(songsC[i]); //si la cancion estaba en comun, la agrega
+            if (isInCommon){
+                assignUnary(a,a,'a', songsC[i]); //si la cancion estaba en comun, la agrega.
+            } 
         }
-        return a;
+        return getPlaylist(a);
     }
     
-    private Playlist difference(Playlist b, Playlist c){
-        String [][] songsB = b.getSongs();
-        String [][] songsC = c.getSongs();
+    private Playlist difference(String a, String b, String c){
+        define(a);
         
-        Playlist a = new Playlist(songsB);
+        Playlist playlistB = getPlaylist(b);
+        Playlist playlistC = getPlaylist(c);
+        
+        String [][] songsB = playlistB.getSongs();
+        String [][] songsC = playlistC.getSongs();
+        
+        assign(a, playlistB.getSongs());
+        
         boolean justInB;
         
-        for (int i = 0; i < c.size(); i++){
+        for (int i = 0; i < playlistC.size(); i++){
             justInB =  true;
-            for (int j = 0; j < b.size(); j++){
+            for (int j = 0; j < playlistB.size(); j++){
                 if (songsC[i][0].equals(songsB[j][0]) && songsC[i][1].equals(songsB[j][1])){
                     justInB = false; 
                     break;//Si solo esta en b, no se le hace nada
                 }
             }
             //Si no esta solo en B, debe eliminarse del resultado
-            if (!justInB) a.delete(songsC[i]);
+            if (!justInB){
+                assignUnary(a, a, 'd', songsC[i]);
+            }
         }
-        return a;
+        return getPlaylist(a);
     }
    
     //If the last operation was successfully completed
