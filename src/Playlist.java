@@ -36,7 +36,7 @@ public class Playlist {
      * delete a song from the playlist if it exists
      * @param song  the song to delete
      */
-    public Playlist delete(String [] song){
+    public Playlist delete(String [] song){   //revisar si sobran los normalizesong aca porque se supone que ya se agregaron normalizadas
         if(!isValidSong(song)) return null;
         song = normalizeSong(song);
         if(!existsSong(song)) return null;
