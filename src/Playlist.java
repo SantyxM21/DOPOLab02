@@ -16,7 +16,7 @@ public class Playlist {
      * Create a copy of the given playlist.
      * @param other  the playlist to copy
      */
-    public Playlist(Playlist other){
+    private Playlist(Playlist other){
         this.songs = other.getSongs(); 
     }
 
@@ -25,7 +25,7 @@ public class Playlist {
      * @param song  the song to add
      */
     public Playlist add(String [] song){
-        if(song == null || !isValidSong(song)) {
+        if(!isValidSong(song)) {
             Playlist pl = new Playlist(this);
             return pl;
         }
@@ -51,7 +51,7 @@ public class Playlist {
      * @param song  the song to delete
      */
     public Playlist delete(String [] song){   //revisar si sobran los normalizesong aca porque se supone que ya se agregaron normalizadas
-        if(song == null || !isValidSong(song)) {
+        if(!isValidSong(song)) {
             Playlist pl = new Playlist(this);
             return pl;
         }
@@ -206,7 +206,7 @@ public class Playlist {
 
     private boolean isValidSong(String[] song){
         boolean isValid = true;
-        if (song.length != 5) isValid = false;
+        if (song == null || song.length != 5) isValid = false;
         else if(song[0] == null) isValid = false; // El titulo de la cancion es obligatorio
         else if(song[1] == null) isValid = false; // Nombre del artista obligatorio
         else if(song[3] != null && !song[3].trim().matches("[1-9]")) isValid = false; // La duracion de la cancion debe ser un número entre 1 y 9
