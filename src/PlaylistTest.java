@@ -76,15 +76,22 @@ public class PlaylistTest{
 
     @Test
     public void shouldAssignAPlaylistToAName(){
+        String [][] finalSongs=
+            {{"Alive", "Pearl Jam", "Rock", "5", "****"},
+             {"Creep", "Radiohead", "Rock", null, "*****"},};
+        Playlist finalPl = new Playlist(finalSongs);
+
+
         MiniTunes mt = new MiniTunes();
         mt.define("Rockcitos");
         String [][] songs=
-            {{"Numb", "Linkin Park", "9", "Rock", null},
+            {{"Numb", "Linkin    Park", "9", "Rock", null},
              {"Alive", "Pearl Jam", "Rock", "5", "****"},
              {"Creep", "Radiohead", "Rock", null, "*****"},};
         mt.assign("Rockcitos", songs);
 
         assertEquals(2, mt.size("Rockcitos"));
+        assertEquals(new Playlist(finalSongs), mt.getPlaylist("Rockcitos"));
     }
 
     @Test
@@ -103,7 +110,7 @@ public class PlaylistTest{
         Playlist pl = new Playlist(songs);
         
         String[] newSong = {"Alive", "Pearl Jam", "Rock", "5", "****"};
-        pl.add(newSong);
+        pl = pl.add(newSong);
 
         assertEquals(2, pl.size());
     }
@@ -124,13 +131,94 @@ public class PlaylistTest{
              {"   Numb   ", "Linkin     Park   ", "Rock", "7", null}};
 
         Playlist pl = new Playlist(songs);
-        pl.delete(songToDelete);
+        pl = pl.delete(songToDelete);
 
         
         assertEquals(2, pl.size());
         assertEquals(new Playlist(expResult), pl);
     }
 
+    @Test
+    public void nombre3(){
+        String [][] songs=
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb", "Linkin Park   ", "Rock", "7", null},
+             {"Alive", "PEARL   JAM", "Rock", "5", "****"}};
+
+        String[][] expStrings =
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb", "Linkin Park   ", "Rock", "7", null},
+             {"Alive", "PEARL   JAM", "Rock", "5", "****"},
+             {"Creep", "Radiohead", "Rock", null, "*****"}};
+
+        String[] newSong = new String[]{"Creep", "Radiohead", "Rock", null, "*****"};
+
+        MiniTunes mt = new MiniTunes();
+        mt.define("Favs");
+        mt.assign("Favs", songs);
+
+        mt.define("Nuevas favoritas");
+
+        mt.assignUnary("Nuevas favoritas", "Favs", 'a', newSong);
+
+        assertEquals(new Playlist(songs), mt.getPlaylist("Favs"));
+        assertEquals(new Playlist(expStrings), mt.getPlaylist("Nuevas favoritas"));
+    }
+
+    @Test
+    public void nombre4(){
+        String [][] songs=
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb", "Linkin Park   ", "Rock", "7", null},
+             {"Alive", "PEARL   JAM", "Rock", "5", "****"},
+             {"Creep", "Radiohead", "Pop", null, "*****"}};
+
+        String[][] expStrings =
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb", "Linkin Park   ", "Rock", "7", null},
+             {"Creep", "Radiohead", "Pop", null, "*****"}};
+
+        String[] songToDelete = new String[]{"ALIVE", "Pearl     JAM", "Rock", "5", "****"};
+
+        MiniTunes mt = new MiniTunes();
+        mt.define("Favs");
+        mt.assign("Favs", songs);
+
+        mt.define("Sin Alive");
+
+        mt.assignUnary("Sin Alive", "Favs", 'd', songToDelete);
+
+        assertEquals(new Playlist(songs), mt.getPlaylist("Favs"));
+        assertEquals(3, mt.size("Sin Alive"));
+        assertEquals(new Playlist(expStrings), mt.getPlaylist("Sin Alive"));
+    }
+
+    @Test
+    public void nombre5(){
+        String [][] songs=
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"   Numb", "Linkin Park   ", "Rock", "7", null},
+             {"Alive", "PEARL   JAM", "Rock", "5", "****"},
+             {"Creep", "Radiohead", "Pop", null, "*****"}};
+
+        String[][] expStrings =
+            {{"ONE", "U2", "Rock", "4", "****"},
+             {"Alive", "PEARL   JAM", "Rock", "5", "****"}};
+
+        String[] pattern = new String[]{null, null, "Rock", null, "* *  **"};
+
+        MiniTunes mt = new MiniTunes();
+        mt.define("Favs");
+        mt.assign("Favs", songs);
+
+        mt.define("Rock de cuatro estrellas");
+
+        mt.assignUnary("Rock de cuatro estrellas", "Favs", 's', pattern);
+
+        assertEquals(new Playlist(songs), mt.getPlaylist("Favs"));
+        assertEquals(2, mt.size("Rock de cuatro estrellas"));
+        assertEquals(new Playlist(expStrings), mt.getPlaylist("Rock de cuatro estrellas"));
+    }
 
 
 

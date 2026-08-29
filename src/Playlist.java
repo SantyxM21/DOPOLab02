@@ -13,13 +13,27 @@ public class Playlist {
     }
 
     /**
+     * Create a copy of the given playlist.
+     * @param other  the playlist to copy
+     */
+    public Playlist(Playlist other){
+        this.songs = other.getSongs(); 
+    }
+
+    /**
      * add a song to the playlist. If the song already exists, it won't be added.
      * @param song  the song to add
      */
     public Playlist add(String [] song){
-        if(!isValidSong(song)) return null;
+        if(song == null || !isValidSong(song)) {
+            Playlist pl = new Playlist(this);
+            return pl;
+        }
         song = normalizeSong(song);
-        if(existsSong(song)) return null;
+        if(existsSong(song)) {
+            Playlist pl = new Playlist(this);
+            return pl;
+        }
 
         String[][] newSongs = new String[this.size() + 1][];
         int index = 0;
@@ -28,8 +42,8 @@ public class Playlist {
             index++;
         }
         newSongs[index] = song;
-        this.songs = newSongs;
-        return this;
+        Playlist pl = new Playlist(newSongs);
+        return pl;
     }
     
     /**
@@ -37,9 +51,15 @@ public class Playlist {
      * @param song  the song to delete
      */
     public Playlist delete(String [] song){   //revisar si sobran los normalizesong aca porque se supone que ya se agregaron normalizadas
-        if(!isValidSong(song)) return null;
+        if(song == null || !isValidSong(song)) {
+            Playlist pl = new Playlist(this);
+            return pl;
+        }
         song = normalizeSong(song);
-        if(!existsSong(song)) return null;
+        if(!existsSong(song)) {
+            Playlist pl = new Playlist(this);
+            return pl;
+        }
         String[][] newSongs = new String[size() - 1][];
         int index = 0;
         for(String[] s : songs){
@@ -48,8 +68,8 @@ public class Playlist {
                 index++;
             }
         }
-        this.songs = newSongs;
-        return this;
+        Playlist pl = new Playlist(newSongs);
+        return pl;
     }
     
     /**
@@ -58,9 +78,11 @@ public class Playlist {
      * @return  a playlist containing the selected songs
      */
     public Playlist select(String [] values){
-        if(!isValidSong(values)) return null;
+        if(values == null) {
+            Playlist pl = new Playlist(this);
+            return pl;
+        }
         values = normalizeSong(values);
-        if(values == null) return this;
 
         ArrayList<String[]> selected = new ArrayList<>();
         for(String[] s : songs){
@@ -121,8 +143,20 @@ public class Playlist {
      * Return the songs of the playlist.
      * @return  the songs of the playlist
      */
-    public String[][] getSongs(){
-        return this.songs;
+    public String[][] getSongs(){ // crea una copia y la envia
+        if (this.songs == null) {
+            return null;
+        }
+
+        String[][] copia = new String[this.songs.length][];
+
+        for (int i = 0; i < this.songs.length; i++) {
+            if (this.songs[i] != null) {
+                copia[i] = this.songs[i].clone(); 
+            }
+        }
+
+        return copia;
     }
     
     private String [][] normalizeSongs(String[][] songs){
@@ -172,8 +206,8 @@ public class Playlist {
 
     private boolean isValidSong(String[] song){
         boolean isValid = true;
-
-        if(song[0] == null) isValid = false; // El titulo de la cancion es obligatorio
+        if (song.length != 5) isValid = false;
+        else if(song[0] == null) isValid = false; // El titulo de la cancion es obligatorio
         else if(song[1] == null) isValid = false; // Nombre del artista obligatorio
         else if(song[3] != null && !song[3].trim().matches("[1-9]")) isValid = false; // La duracion de la cancion debe ser un número entre 1 y 9
         else if(song[4] != null && song[4].replace(" ", "").length() > 5) isValid = false; // Un cancion no puede tener mas de 5 en calificación

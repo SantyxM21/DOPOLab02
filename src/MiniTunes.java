@@ -20,13 +20,12 @@ public class MiniTunes{
      * @param name  the name of the new playlist
      */
     public void define(String name){
-        playlists.put(name, null);
+        Playlist emptyPl = new Playlist(new String[0][]); 
+        playlists.put(name, emptyPl);
     }
      
     //Assign a playlist to an existing playlist name
     //a := playlist
-    //*****************IMPORTANTE********************
-    //pueden haber 2 playlists con exactamente el mismo nombre???? NO
     /**
      * Assign a playlist to an existing playlist name.
      * @param name  the name of an existing playlist
@@ -34,14 +33,12 @@ public class MiniTunes{
      */
     public void assign(String a, String [] [] playlist){
         Playlist playListToAssign = new Playlist(playlist);
-        // si "a" no existe no deberia asignar nada
         if (playlists.containsKey(a)) {
             playlists.put(a, playListToAssign);
         }
     }    
 
 
-    //Return a playlist's size
     /**
      * Return a playlist's size.
      * @param name  the name of the playlist
@@ -54,8 +51,6 @@ public class MiniTunes{
         return 0;
     }
     
-    //Returns the playlist names in alphabetical order. comma-separated
-    //DATO INTERESANTE--> en el treemap se guarda orden alfabetico
     /**
      * Return the playlist names in alphabetical order as a String, comma-separated.
      */
@@ -90,7 +85,23 @@ public class MiniTunes{
     //The operator characters are: 'a' (add) , 'd' (delete),'s'(select)
     //For add and delete, the values correspond to the song data. For select, the parameters define the search pattern.
     public void assignUnary(String a, String b, char op, String [] values){
-        
+        Playlist bPlaylist = getPlaylist(b);
+        if(bPlaylist == null) return;
+
+        switch(op){
+            case 'a':
+                String[][] bAdd = bPlaylist.add(values).getSongs();
+                assign(a, bAdd);
+                break;
+            case 'd':
+                String[][] bDel = bPlaylist.delete(values).getSongs();
+                assign(a, bDel);
+                break;
+            case 's':
+                String[][] bSel = bPlaylist.select(values).getSongs();
+                assign(a, bSel);
+                break;
+        }
     }
       
     
@@ -208,5 +219,9 @@ public class MiniTunes{
     //If the last operation was successfully completed
     public boolean ok(){
         return false;
+    }
+
+    public Playlist getPlaylist(String plName){
+        return playlists.get(plName);
     }
 }
