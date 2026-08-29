@@ -92,7 +92,7 @@ public class MiniTunesTest
         miniTest.define("pl3");
         
         String listOflNames = miniTest.toString();
-        System.out.println(listOflNames);
+        System.out.println(listOflNames);//quitar porque solo era de prueba
         
         assertEquals("pl1,pl2,pl3", listOflNames );
     }
@@ -164,8 +164,8 @@ public class MiniTunesTest
         
         Playlist itWillBeTested = miniTest.getPlaylist("plResults");
         
-        System.out.println("ESPERADO: " + Arrays.deepToString(intersectionDone.getSongs()));
-        System.out.println("OBTENIDO: " + Arrays.deepToString(itWillBeTested.getSongs()));
+        System.out.println("ESPERADO: " + Arrays.deepToString(intersectionDone.getSongs()));//quitar porque solo era de prueba
+        System.out.println("OBTENIDO: " + Arrays.deepToString(itWillBeTested.getSongs()));//quitar porque solo era de prueba
         
         assertEquals(intersectionDone, itWillBeTested);
     }
