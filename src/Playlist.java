@@ -174,7 +174,6 @@ public class Playlist {
             if(add) normSongs.add(song);
         }
 
-        System.out.println(Arrays.deepToString(normSongs.toArray(new String[0][])));
         return  normSongs.toArray(new String[0][]);
     }
 
@@ -184,8 +183,10 @@ public class Playlist {
         for (String str : song) {
             if(str == null){
                 // pass
-            }else if(str.contains("*")){
-                str = str.replace(" ", "");
+            }else if(str.trim().isEmpty()){
+                str = ""; 
+            }else if(index == 4){ // Solo la calificación se normaliza quitando espacios
+                str = str.replaceAll("\\s", "");
             }else {
                 String[] listWords = str.trim().toLowerCase().split("\\s+");
                 StringBuilder concat = new StringBuilder();
@@ -210,7 +211,11 @@ public class Playlist {
         else if(song[0] == null) isValid = false; // El titulo de la cancion es obligatorio
         else if(song[1] == null) isValid = false; // Nombre del artista obligatorio
         else if(song[3] != null && !song[3].trim().matches("[1-9]")) isValid = false; // La duracion de la cancion debe ser un número entre 1 y 9
-        else if(song[4] != null && song[4].replace(" ", "").length() > 5) isValid = false; // Un cancion no puede tener mas de 5 en calificación
+        else if(song[4] != null){
+            String stars = song[4].replaceAll("\\s", "");
+            if (stars.replace("*", "").length() > 0 || stars.length() < 1 || stars.length() > 5)
+                isValid = false; // La calificación debe tener entre 1 y 5 '*' y ningun otro simbolo
+        }
 
         return isValid;
     }

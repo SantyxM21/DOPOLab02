@@ -220,7 +220,55 @@ public class PlaylistTest{
         assertEquals(new Playlist(expStrings), mt.getPlaylist("Rock de cuatro estrellas"));
     }
     
-    
+    @Test 
+    public void nombre6(){
+        String[][] empty = {};
+        Playlist play = new Playlist(empty);
+        String[] song = {"Alive", "PEARL   JAM", "Rock", "5", "** **"};
+
+        play = play.add(song);
+        assertEquals(1, play.size());
+    }
+
+    @Test
+    public void nombre7(){
+        String[][] empty = {};
+        Playlist play = new Playlist(empty);
+        String[] songNoTitle = {null, "PEARL   JAM", "Rock", "5", "****"};
+        play = play.add(songNoTitle);
+
+        String[] songNoArtist = {"Alive", null, "Rock", "5", "****"};
+        play = play.add(songNoArtist);
+
+        String[] songIncorrectMin = {"Alive", "PEARL   JAM", "Rock", "5.5", "**"};
+        play = play.add(songNoTitle);
+
+        String[] songWrongStarts = {"Alive", "PEARL   JAM", "Rock", "2", "5"};
+        play = play.add(songWrongStarts);
+
+        assertEquals(0, play.size());
+    }
+
+    @Test 
+    public void nombre8(){
+        String[][] songs = {{"Alive", "PEARL   JAM", "Rock", "5", "** **"}};
+        Playlist play = new Playlist(songs);
+
+        String[] similarSong = {"ALIVE", "PeaRL JaM", "ROCK", null, "*"};
+
+        play = play.add(similarSong);
+
+        assertEquals(1, play.size());
+        assertEquals(new Playlist(songs), play);
+    }
+
+    @Test
+    public void nombre9(){
+        
+    }
+
+
+
     /**
      * Tears down the test fixture.
      *

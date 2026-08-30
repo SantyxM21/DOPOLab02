@@ -211,7 +211,6 @@ public class MiniTunes{
             for (int j = 0; j < playlistB.size(); j++){
                 if (songsC [i][0].equals(songsB[j][0]) && songsC[i][1].equals(songsB[j][1])){
                     //si estan en comun, hacen parte de la interseccion.
-                    System.out.println("Si esta entrando aca.");
                     isInCommon = true;
                     break;
                 }
