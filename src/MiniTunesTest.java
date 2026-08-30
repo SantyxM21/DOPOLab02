@@ -92,8 +92,6 @@ public class MiniTunesTest
         miniTest.define("pl3");
         
         String listOflNames = miniTest.toString();
-        System.out.println(listOflNames);//quitar porque solo era de prueba
-        
         assertEquals("pl1,pl2,pl3", listOflNames );
     }
     
@@ -131,7 +129,7 @@ public class MiniTunesTest
         
         miniTest.define("pl1");
         miniTest.define("pl2");
-        miniTest.define("plresult");
+        miniTest.define("plResult");
         
         miniTest.assign("pl1", songs1); 
         miniTest.assign("pl2", songs2);
@@ -163,9 +161,6 @@ public class MiniTunesTest
         miniTest.assignBinary("plResults", "pl1", 'i', "pl2");
         
         Playlist itWillBeTested = miniTest.getPlaylist("plResults");
-        
-        System.out.println("ESPERADO: " + Arrays.deepToString(intersectionDone.getSongs()));//quitar porque solo era de prueba
-        System.out.println("OBTENIDO: " + Arrays.deepToString(itWillBeTested.getSongs()));//quitar porque solo era de prueba
         
         assertEquals(intersectionDone, itWillBeTested);
     }
