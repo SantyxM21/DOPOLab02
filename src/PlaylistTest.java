@@ -105,7 +105,7 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre1(){
+    public void shouldAddASongToAPlaylist(){
         String [][] songs = {{"Numb", "Linkin Park", "Rock", "9", null}};
         Playlist pl = new Playlist(songs);
         
@@ -116,7 +116,7 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre2(){
+    public void shouldDeleteASongFromAPlaylist(){
         String [][] songs=
             {{"ONE", "U2", "Rock", "4", "****"},
              {"   Numb", "Linkin Park   ", "Rock", "7", null},
@@ -139,7 +139,7 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre3(){
+    public void shouldAssignTheAdditionOfASongToAnotherName(){
         String [][] songs=
             {{"ONE", "U2", "Rock", "4", "****"},
              {"   Numb", "Linkin Park   ", "Rock", "7", null},
@@ -166,7 +166,7 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre4(){
+    public void shouldAssignTheDeletionOfASongToAnotherName(){
         String [][] songs=
             {{"ONE", "U2", "Rock", "4", "****"},
              {"   Numb", "Linkin Park   ", "Rock", "7", null},
@@ -194,7 +194,7 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre5(){
+    public void shouldAssignTheSelectionOfSongsToAnotherName(){
         String [][] songs=
             {{"ONE", "U2", "Rock", "4", "****"},
              {"   Numb", "Linkin Park   ", "Rock", "7", null},
@@ -221,7 +221,7 @@ public class PlaylistTest{
     }
     
     @Test 
-    public void nombre6(){
+    public void shouldAddASongWithSpacesInItsRating(){
         String[][] empty = {};
         Playlist play = new Playlist(empty);
         String[] song = {"Alive", "PEARL   JAM", "Rock", "5", "** **"};
@@ -231,7 +231,7 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre7(){
+    public void shouldNotAddInvalidSongs(){
         String[][] empty = {};
         Playlist play = new Playlist(empty);
         String[] songNoTitle = {null, "PEARL   JAM", "Rock", "5", "****"};
@@ -241,7 +241,7 @@ public class PlaylistTest{
         play = play.add(songNoArtist);
 
         String[] songIncorrectMin = {"Alive", "PEARL   JAM", "Rock", "5.5", "**"};
-        play = play.add(songNoTitle);
+        play = play.add(songIncorrectMin);
 
         String[] songWrongStarts = {"Alive", "PEARL   JAM", "Rock", "2", "5"};
         play = play.add(songWrongStarts);
@@ -250,7 +250,7 @@ public class PlaylistTest{
     }
 
     @Test 
-    public void nombre8(){
+    public void shouldNotAddARepeatedSong(){
         String[][] songs = {{"Alive", "PEARL   JAM", "Rock", "5", "** **"}};
         Playlist play = new Playlist(songs);
 
@@ -263,8 +263,86 @@ public class PlaylistTest{
     }
 
     @Test
-    public void nombre9(){
-        
+    public void shouldNotDeleteASongThatIsNotInThePlaylist(){
+        String[][] songs = {{"Alive", "Pearl Jam", "Rock", "5", "****"}};
+        Playlist play = new Playlist(songs);
+
+        String[] absentSong = {"Creep", "Radiohead", "Rock", null, "*****"};
+        play = play.delete(absentSong);
+
+        assertEquals(1, play.size());
+        assertEquals(new Playlist(songs), play);
+    }
+
+    @Test
+    public void shouldBeOkAfterASuccessfulOperation(){
+        String [][] songs = {{"Alive", "Pearl Jam", "Rock", "5", "****"}};
+        String[] newSong = {"Creep", "Radiohead", "Rock", null, "*****"};
+
+        MiniTunes mt = new MiniTunes();
+        mt.define("Favs");
+        assertTrue(mt.ok());
+
+        mt.assign("Favs", songs);
+        assertTrue(mt.ok());
+
+        mt.size("Favs");
+        assertTrue(mt.ok());
+
+        mt.assignUnary("Nuevas", "Favs", 'a', newSong);
+        assertTrue(mt.ok());
+
+        mt.assignBinary("Union", "Favs", 'u', "Nuevas");
+        assertTrue(mt.ok());
+    }
+
+    @Test
+    public void shouldNotBeOkAfterAnUnsuccessfulOperation(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Favs");
+
+        mt.define("Favs");                                 
+        assertFalse(mt.ok());
+
+        mt.assign("Desconocida", new String[0][]);         
+        assertFalse(mt.ok());
+
+        mt.size("Desconocida");                           
+        assertFalse(mt.ok());
+
+        mt.assignUnary("Nuevas", "Desconocida", 'a', null); 
+        assertFalse(mt.ok());
+
+        mt.assignBinary("Nuevas", "Favs", 'x', "Favs");   
+        assertFalse(mt.ok());
+    }
+
+    @Test
+    public void shouldPass(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Rock");
+        mt.assign("Rock", new String[][]{{"Alive", "Pearl Jam", "Rock", "5", "****"}});
+
+
+        assertEquals(1, mt.size("Rock"));
+    }
+
+    @Test
+    public void shouldFail(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Rock");
+        mt.define("Rock");   
+
+        assertTrue("Se esperaba que ok() fuera true", mt.ok());
+    }
+
+    @Test
+    public void shouldErr(){
+        MiniTunes mt = new MiniTunes();
+        mt.define("Rock");
+
+        Playlist pl = mt.getPlaylist("Salsa");
+        assertEquals(0, pl.size());
     }
 
 

@@ -116,7 +116,30 @@ public class Playlist {
     //CREEP    RADIOHEAD       ROCK               *****
     //DREAMS   FLEETWOOD MAC   .              4   ****
     public String toString() {
-        return "";
+        String[][] rows = new String[songs.length + 1][5];
+        rows[0] = new String[]{"TITLE", "ARTIST", "GENRE", "DURATION", "RATING"};
+        for (int i = 0; i < songs.length; i++){
+            for (int j = 0; j < 5; j++){
+                String value = songs[i][j];
+                // El genero desconocido se marca con '.', los demas se dejan en blanco
+                rows[i + 1][j] = (value == null || value.isEmpty()) ? (j == 2 ? "." : "") : value.toUpperCase();
+            }
+        }
+
+        int[] width = new int[5];
+        for (String[] row : rows){
+            for (int j = 0; j < 5; j++) width[j] = Math.max(width[j], row[j].length());
+        }
+
+        ArrayList<String> lines = new ArrayList<>();
+        for (String[] row : rows){
+            StringBuilder line = new StringBuilder();
+            for (int j = 0; j < 5; j++){ 
+                line.append(String.format("%" + (j == 3 ? "" : "-") + width[j] + "s", row[j])).append("   ");
+            }
+            lines.add(line.toString().replaceAll("\\s+$", ""));
+        }
+        return String.join("\n", lines);
     }
     
     /**
@@ -159,6 +182,9 @@ public class Playlist {
         return copia;
     }
     
+    /**
+     * Filters out invalid songs and removes duplicates (same title and artist).
+     */
     private String [][] normalizeSongs(String[][] songs){
         ArrayList<String[]> normSongs = new ArrayList<>();
         if (songs == null) return new String[0][]; 
@@ -178,6 +204,10 @@ public class Playlist {
         return  normSongs.toArray(new String[0][]);
     }
 
+    /**
+     * Normalizes each song field: capitalizes title/artist/album and
+     * strips whitespace from the rating.
+     */
     private String[] normalizeSong(String[] song){
         String[] normSong = new String[song.length];
         int index = 0;
@@ -206,6 +236,10 @@ public class Playlist {
         return normSong;
     }
 
+    /**
+     * Checks that a song has a valid format: title, artist, duration (1-9)
+     * and rating (1 to 5 '*' characters) all valid.
+     */
     private boolean isValidSong(String[] song){
         boolean isValid = true;
         if (song == null || song.length != 5) isValid = false;
@@ -221,6 +255,10 @@ public class Playlist {
         return isValid;
     }
 
+    /**
+     * Checks whether a song with the same title and artist already exists
+     * in this playlist.
+     */
     private boolean existsSong(String[] song){
         for(String[] s : songs){
             if(s[0].equals(song[0]) && s[1].equals(song[1])) return true;

@@ -96,10 +96,16 @@ public class MiniTunes{
         return songsComma;
     }    
     
-    //Assigns the value of a unary operation to a playlist name
-    // a = b op parameters
-    //The operator characters are: 'a' (add) , 'd' (delete),'s'(select)
-    //For add and delete, the values correspond to the song data. For select, the parameters define the search pattern.
+    /**
+     * Assigns the value of a unary operation to a playlist name.
+     * a = b op values
+     * For add and delete, the values correspond to the song data.
+     * For select, the values define the search pattern.
+     * @param a the name of the playlist where the result is stored
+     * @param b the name of an existing playlist used as operand
+     * @param op the operator: 'a' (add), 'd' (delete), 's' (select)
+     * @param values the song data (add, delete) or the search pattern (select)
+     */
     public void assignUnary(String a, String b, char op, String [] values){
         if (a == null) {
             lastOk = false;
@@ -288,6 +294,11 @@ public class MiniTunes{
         return lastOk;
     }
 
+    /**
+     * Return the playlist stored under the given name.
+     * @param plName the name of the playlist
+     * @return the playlist with that name, or null if the name is null or undefined
+     */
     public Playlist getPlaylist(String plName){
         if (plName == null) return null; 
         return playlists.get(plName);
