@@ -116,7 +116,7 @@ public class Playlist {
 //CREEP    RADIOHEAD       ROCK               *****
 //DREAMS   FLEETWOOD MAC   .              4   ****
     public String toString() {
-      return "";
+        return "";
     }
     
     /**
@@ -161,6 +161,7 @@ public class Playlist {
     
     private String [][] normalizeSongs(String[][] songs){
         ArrayList<String[]> normSongs = new ArrayList<>();
+        if (songs == null) return new String[0][]; 
 
         for (String[] s : songs) {
             if(!isValidSong(s)) continue; // Si la canción tiene algun formato invalido, se omite 
@@ -168,7 +169,7 @@ public class Playlist {
             String[] song = normalizeSong(s);
 
             for(String[] ns : normSongs){
-                if(ns[0].equals(s[0]) && ns[1].equals(s[1])) add = false; // Si la canción ya existe en la lista normalizada, se omite
+                if(ns[0].equals(song[0]) && ns[1].equals(song[1])) add = false; // Si la canción ya existe en la lista normalizada, se omite
             }
             
             if(add) normSongs.add(song);

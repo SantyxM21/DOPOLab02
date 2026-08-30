@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 /** MiniTunes.java
@@ -9,10 +8,12 @@ import java.util.TreeMap;
 public class MiniTunes{
     
     private TreeMap<String,Playlist> playlists;
+    private boolean lastOk;
     
     
     public MiniTunes(){
         playlists = new TreeMap<>();
+        lastOk = true;
     }
 
     /**
@@ -20,8 +21,13 @@ public class MiniTunes{
      * @param name  the name of the new playlist
      */
     public void define(String name){
-        Playlist emptyPl = new Playlist(new String[0][]); 
+        if (name == null || playlists.containsKey(name)) { 
+            lastOk = false;
+            return;
+        }
+        Playlist emptyPl = new Playlist(new String[0][]);
         playlists.put(name, emptyPl);
+        lastOk = true;
     }
      
     //Assign a playlist to an existing playlist name
@@ -32,11 +38,13 @@ public class MiniTunes{
      * @param playlist  the playlist to assign
      */
     public void assign(String a, String [] [] playlist){
-        Playlist playListToAssign = new Playlist(playlist);
-        if (playlists.containsKey(a)) {
-            playlists.put(a, playListToAssign);
+        if (a == null || !playlists.containsKey(a)) {
+            lastOk = false;
+            return;
         }
-    }    
+        playlists.put(a, new Playlist(playlist));
+        lastOk = true;
+    }
 
 
     /**
@@ -44,7 +52,8 @@ public class MiniTunes{
      * @param name  the name of the playlist
      */
     public int size(String a){
-        Playlist playList = playlists.get(a);
+        Playlist playList = getPlaylist(a);
+        lastOk = (playList != null);
         if (playList != null ){
             return playList.size();
         }
@@ -55,13 +64,7 @@ public class MiniTunes{
      * Return the playlist names in alphabetical order as a String, comma-separated.
      */
     public String toString(){
-        ArrayList <String> names = new ArrayList <>(playlists.keySet());
-        if (names.size() == 0) return "";
-        else if (names.size() == 1){
-            return names.get(0);
-        }
-        String namesComma = String.join(",", names);
-        return namesComma;
+        return String.join(",", playlists.keySet());
     }
     
     // Returns the string representation of a playlist.
@@ -70,8 +73,9 @@ public class MiniTunes{
      * @param name  the name of a playlist
      */
     public String toString(String name){
-        Playlist actualPlaylist = playlists.get(name);
-        
+        Playlist actualPlaylist = getPlaylist(name);
+        lastOk = (actualPlaylist != null); 
+
         if (actualPlaylist == null) return "";
         
         String [][] actualSongs = actualPlaylist.getSongs(); 
@@ -93,7 +97,10 @@ public class MiniTunes{
     //For add and delete, the values correspond to the song data. For select, the parameters define the search pattern.
     public void assignUnary(String a, String b, char op, String [] values){
         Playlist bPlaylist = getPlaylist(b);
-        if(bPlaylist == null) return;
+        if(bPlaylist == null) { 
+            lastOk = false; 
+            return; 
+        }
 
         switch(op){
             case 'a':
@@ -108,6 +115,8 @@ public class MiniTunes{
                 String[][] bSel = bPlaylist.select(values).getSongs();
                 assign(a, bSel);
                 break;
+            default:
+                lastOk = false; 
         }
     }
       
@@ -117,8 +126,8 @@ public class MiniTunes{
     //The operator characters are:  'u' union, 'i' intersection, 'd' difference
     //Songs preserve their original order in the resulting playlist.
     public void assignBinary(String a, String b, char op, String c){
-        Playlist playlistB = playlists.get(b);
-        Playlist playlistC = playlists.get(c);
+        Playlist playlistB = getPlaylist(b);
+        Playlist playlistC = getPlaylist(c);
         
         Playlist playlistA = null;
         
@@ -127,38 +136,49 @@ public class MiniTunes{
                 if (playlistC == null){
                 if (playlistB == null){
                     playlistA = null;
+                    lastOk = false;
                     return;
                 }
                 playlistA = playlistB;
+                lastOk = false;
                 return;
                 }
                 else if (playlistB == null) {
                     playlistA = playlistC;
+                    lastOk = false;
                     return;
                 }
                 playlistA = union(a, b, c);
                 break;
-                
+
             case 'i':
                 if (playlistC == null || playlistB == null){
                 playlistA = null;
+                lastOk = false;
                 return;
                 }
                 playlistA = intersection(a, b, c);
                 break;
-                
+
             case 'd':
                 if (playlistB == null){
                 playlistA = null;
+                lastOk = false;
                 return;
                 }
                 else if (playlistB != null && playlistC == null){
                     playlistA = playlistB;
+                    lastOk = false;
                     return;
                 }
                 playlistA = difference(a, b, c);
                 break;
+
+            default:
+                lastOk = false; 
+                return;
         }
+        lastOk = (playlistA != null);
         if (playlistA != null){
             playlists.put(a, playlistA);
         }
@@ -253,10 +273,11 @@ public class MiniTunes{
    
     //If the last operation was successfully completed
     public boolean ok(){
-        return false;
+        return lastOk;
     }
 
     public Playlist getPlaylist(String plName){
+        if (plName == null) return null; 
         return playlists.get(plName);
     }
 }
