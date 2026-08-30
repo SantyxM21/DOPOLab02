@@ -109,12 +109,12 @@ public class Playlist {
    
     // Songs are in uppercase with unnecessary spaces removed.
     // Columns are aligned and separated by three spaces.
-//TITLE    ARTIST          GENRE   DURATION   RATING
-//ONE      U2              ROCK           4   *****
-//NUMB     LINKIN PARK     ROCK           3
-//ALIVE    PEARL JAM       ROCK           5   ****
-//CREEP    RADIOHEAD       ROCK               *****
-//DREAMS   FLEETWOOD MAC   .              4   ****
+    //TITLE    ARTIST          GENRE   DURATION   RATING
+    //ONE      U2              ROCK           4   *****
+    //NUMB     LINKIN PARK     ROCK           3
+    //ALIVE    PEARL JAM       ROCK           5   ****
+    //CREEP    RADIOHEAD       ROCK               *****
+    //DREAMS   FLEETWOOD MAC   .              4   ****
     public String toString() {
         return "";
     }

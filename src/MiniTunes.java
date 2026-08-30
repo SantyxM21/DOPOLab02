@@ -1,7 +1,7 @@
 import java.util.TreeMap;
-
 /** MiniTunes.java
- * 
+ * A minitune where will be added playlists with or without and songs, and
+ * which allows modificacions
  * @author ESCUELA 2026-02
  */
     
@@ -10,7 +10,9 @@ public class MiniTunes{
     private TreeMap<String,Playlist> playlists;
     private boolean lastOk;
     
-    
+    /**
+     * Create a minitune which will save playlists.
+     */
     public MiniTunes(){
         playlists = new TreeMap<>();
         lastOk = true;
@@ -50,6 +52,7 @@ public class MiniTunes{
     /**
      * Return a playlist's size.
      * @param name  the name of the playlist
+     * @return the size of a playlist
      */
     public int size(String a){
         Playlist playList = getPlaylist(a);
@@ -62,6 +65,7 @@ public class MiniTunes{
     
     /**
      * Return the playlist names in alphabetical order as a String, comma-separated.
+     * @return string with the playlists names in alphabetical order 
      */
     public String toString(){
         return String.join(",", playlists.keySet());
@@ -71,6 +75,7 @@ public class MiniTunes{
     /**
      * Return the string representation of a playlist. the names of a list
      * @param name  the name of a playlist
+     * @return A string with the name of the songs in a playlist. 
      */
     public String toString(String name){
         Playlist actualPlaylist = getPlaylist(name);
@@ -128,10 +133,17 @@ public class MiniTunes{
     }
       
     
-    //Assigns the value of a binary operation to a playlist name
-    // a = b op c
-    //The operator characters are:  'u' union, 'i' intersection, 'd' difference
-    //Songs preserve their original order in the resulting playlist.
+    /**
+     * 
+     *Assigns the value of a binary operation to a playlist name
+     * a = b op c
+     *The operator characters are:  'u' union, 'i' intersection, 'd' difference
+     *Songs preserve their original order in the resulting playlist.
+     *@param a The name of a playlist where operations will be saved
+     *@param b The name of a playlist which will be operated with another one
+     *@param op 'u' union, 'i' intersection, 'd' difference
+     *@param c The name of a playlist which will be operated with another one
+     **/
     public void assignBinary(String a, String b, char op, String c){
         if (a == null){
             lastOk = false;
@@ -171,6 +183,14 @@ public class MiniTunes{
         playlists.put(a, playlistA);
         lastOk = true;
     }
+    
+    /**
+     * Joins two playlist without repeating songs.
+     * @param a 
+     * @param playlistB a playlist
+     * @param playlistC a playlist
+     * @return a Playlist after join two different playlists
+     */
     private Playlist union(String a, Playlist playlistB, Playlist playlistC){
         String[][] songsB = playlistB.getSongs();
         String[][] songsC = playlistC.getSongs();
@@ -196,6 +216,13 @@ public class MiniTunes{
         return getPlaylist(a);
     }
     
+    /**
+     * Do the intersection of two playlist adding the songs in common.
+     * @param a 
+     * @param playlistB a playlist
+     * @param playlistC a playlist
+     * @return a Playlist after do the intersection two different playlists
+     */
     private Playlist intersection (String a, Playlist playlistB, Playlist playlistC){
         String [][] songsB = playlistB.getSongs();
         String [][] songsC = playlistC.getSongs();
@@ -221,6 +248,13 @@ public class MiniTunes{
         return getPlaylist(a);
     }
     
+    /**
+     * Do the difference of two playlists in the order given.
+     * @param a 
+     * @param playlistB a playlist
+     * @param playlistC a playlist
+     * @return a Playlist after do the difference of two playlists given
+     */
     private Playlist difference(String a, Playlist playlistB, Playlist playlistC){
         String [][] songsB = playlistB.getSongs();
         String [][] songsC = playlistC.getSongs();
@@ -246,7 +280,10 @@ public class MiniTunes{
         return getPlaylist(a);
     }
    
-    //If the last operation was successfully completed
+    /**
+     * If the last operation was successfully completed
+     * @return true if the last operation was successfullty completed
+     */
     public boolean ok(){
         return lastOk;
     }
