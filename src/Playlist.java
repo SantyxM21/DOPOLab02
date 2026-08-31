@@ -106,7 +106,10 @@ public class Playlist {
         return songs.length;
     }    
     
-   
+    /** Transparency note: Method designed with AI generative assistance
+     *  Claude (Anthropic) for dynamic column width calculation
+     * and alignment using String.format.
+     * */
     // Songs are in uppercase with unnecessary spaces removed.
     // Columns are aligned and separated by three spaces.
     //TITLE    ARTIST          GENRE   DURATION   RATING
